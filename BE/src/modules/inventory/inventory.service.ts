@@ -224,7 +224,8 @@ export class InventoryService implements OnModuleInit {
 
     const accounting = await this.userModel.findOne({ role: Role.ACCOUNTING }).exec();
     const warehouseUser = await this.userModel.findOne({ role: Role.WAREHOUSE }).exec();
-    if (!accounting || !warehouseUser) return;
+    const managerUser = await this.userModel.findOne({ role: Role.STORE_MANAGER }).exec();
+    if (!accounting || !warehouseUser || !managerUser) return;
 
     const tea = await this.findIngredientByName('Nước trà đen (pha sẵn)');
     const milk = await this.findIngredientByName('Sữa tươi');
@@ -271,7 +272,7 @@ export class InventoryService implements OnModuleInit {
           { ingredientId: tea._id.toString(), quantity: 25_000 },
         ],
       },
-      warehouseUser,
+      managerUser,
     );
 
     await this.reviewStockRequest(
@@ -295,7 +296,7 @@ export class InventoryService implements OnModuleInit {
           { ingredientId: tea._id.toString(), quantity: 3_000 },
         ],
       },
-      warehouseUser,
+      managerUser,
     );
 
     const kho2Req = await this.createStockRequest(
@@ -311,7 +312,7 @@ export class InventoryService implements OnModuleInit {
           { ingredientId: matcha._id.toString(), quantity: 1_500 },
         ],
       },
-      warehouseUser,
+      managerUser,
     );
 
     await this.reviewStockRequest(
@@ -329,7 +330,7 @@ export class InventoryService implements OnModuleInit {
         purpose: 'Bổ sung topping kho lạnh',
         lines: [{ ingredientId: pearl._id.toString(), quantity: 3_000 }],
       },
-      warehouseUser,
+      managerUser,
     );
   }
 
